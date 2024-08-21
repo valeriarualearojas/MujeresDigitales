@@ -1,0 +1,69 @@
+// Selección de elementos del DOM
+const taskInput = document.getElementById('taskInput');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const taskList = document.getElementById('taskList');
+
+// Arreglo para almacenar las tareas
+let tasks = [];
+
+// Función para agregar una tarea
+function addTask() {
+    const taskText = taskInput.value.trim();
+
+    if (taskText !== "") {
+        // Crear objeto tarea
+        const task = {
+            id: Date.now(),
+            text: taskText,
+            completed: false
+        };
+
+        // Agregar la tarea al arreglo
+        tasks.push(task);
+
+        // Limpiar el campo de entrada
+        taskInput.value = "";
+
+        // Actualizar la lista de tareas en el DOM
+        renderTasks();
+    }
+}
+
+// Función para renderizar las tareas en la lista
+function renderTasks() {
+    // Limpiar la lista de tareas en el DOM
+    taskList.innerHTML = "";
+
+    // Recorrer el arreglo de tareas y crear elementos <li> para cada tarea
+    tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.textContent = task.text;
+
+        // Botón para eliminar la tarea
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = "Eliminar";
+        deleteBtn.addEventListener('click', () => deleteTask(task.id));
+
+        li.appendChild(deleteBtn);
+        taskList.appendChild(li);
+    });
+}
+
+// Función para eliminar una tarea
+function deleteTask(taskId) {
+    // Filtrar las tareas, eliminando la tarea con el ID especificado
+    tasks = tasks.filter(task => task.id !== taskId);
+
+    // Actualizar la lista de tareas en el DOM
+    renderTasks();
+}
+
+// Event listener para agregar tarea al hacer clic en el botón
+addTaskBtn.addEventListener('click', addTask);
+
+// Event listener para agregar tarea al presionar la tecla "Enter"
+taskInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        addTask();
+    }
+});
